@@ -1,0 +1,87 @@
+#include <iostream>
+#include <map>
+#include <bits/stdc++.h>
+using namespace std;
+
+
+int main(){
+    
+    int w,n;
+    
+	cout<<"Enter the limit for weight : ";
+	cin>>w;
+	
+	cout<<"Enter the lenght for array : ";
+	cin>>n;
+	
+	int profit[n];
+	int weight[n];
+	double value[n];
+	
+	for(int i=0;i<n;i++){
+	    cout<<"Enter Profit and Weight for "<<i+1<<" : \n";
+		cin>>profit[i];
+		cin>>weight[i];
+	}
+	
+	double fraction[n];
+	for(int i=0;i<n;i++){
+	    fraction[i]=double(profit[i])/double(weight[i]);
+	}
+	
+// 	for(int i=0;i<n;i++){
+// 	    cout<<fraction[i]<<" ";
+// 	}
+
+	std ::map<int,double> mapped_fraction;
+	std ::map<int,int> mapped_profit;
+	std ::map<int,int> mapped_weight;
+	
+	for(int i=0;i<n;i++){
+	    mapped_fraction.insert(pair<int,double>(i,fraction[i]));
+	    mapped_profit.insert(pair<int,int>(i,profit[i]));
+	    mapped_weight.insert(pair<int,int>(i,weight[i]));
+	}
+// 	for(int i=0;i<n;i++){
+// 	    cout<<mapped_weight[weight[i]]<<" ";
+// 	}
+    cout<<"Fraction of Profit/Weight : ";
+	for(double a:fraction){
+	    cout<<a<<" ";
+	}
+	
+	sort(fraction, fraction + n, greater<double>());
+	
+	double maxprofit=0.0;
+	
+	for(int i=0;i<n;i++){
+	    int index=0;
+	    for(auto it : mapped_fraction){
+	        if(it.second==fraction[i]){
+	            index=it.first;
+	        }
+	    }
+	    
+	    if(w>=mapped_weight[index]){
+	        w-=mapped_weight[index];
+	        maxprofit+=mapped_profit[index];
+	        value[index]=1;
+	    }
+	    else if(mapped_weight[index]>w && w!=0){
+	        maxprofit+=(double(w)/double(mapped_weight[index]))*mapped_profit[index];
+	        value[index]=(double(w)/double(mapped_weight[index]));
+	        w-=(double(w)/double(mapped_weight[index]));
+	    }
+	    else{
+	        value[index]=0;
+	    }
+	}
+	
+	cout<<"\nMax_Profit : "<<maxprofit<<"\n";
+	cout<<"Fraction of Profit used : ";
+	for(double a:value){
+	    cout<<a<<" ";
+	}
+	return 0;
+}
+
