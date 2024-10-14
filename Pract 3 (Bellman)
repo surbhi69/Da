@@ -1,76 +1,57 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-struct edge{
-	int src,dst,wt;
+struct Edge {
+    int src, dst, wt;
 };
-int V,E;
 
-void bellmanFord(vector<edge>& Edges)
-{
-	int parent[V];		//Stores Shortest Path Structure
-	int cost_parent[V];	//Cost of the node to parent edge weight
-	vector<int> value(V,INT_MAX);	//Keeps shortest path values to each vertex from source
-	
-	//Assuming start point as Node-0
-	parent[0] = -1;	//Start node has no parent
-	value[0] = 0;	//start node has value=0 to get picked 1st
+void bellmanFord(int V, int E, vector<Edge>& edges) {
+    vector<int> dist(V, INT_MAX);
+    dist[0] = 0; // Source vertex (node 0)
+    
+    // Relax edges V-1 times
+    for (int i = 1; i < V; ++i) {
+        for (int j = 0; j < E; ++j) {
+            int u = edges[j].src;
+            int v = edges[j].dst;
+            int wt = edges[j].wt;
+            if (dist[u] != INT_MAX && dist[u] + wt < dist[v]) {
+                dist[v] = dist[u] + wt;
+            }
+        }
+    }
 
-	//Include (V-1) edges to cover all V-vertices
-	bool updated;
-	for(int i=0;i<V-1;++i)
-	{
-		updated = false;
-		for(int j=0;j<E;++j)
-		{
-			int U = Edges[j].src;
-			int V = Edges[j].dst;
-			int wt = Edges[j].wt;
-			if(value[U]!=INT_MAX and value[U]+wt<value[V])
-			{
-				value[V] = value[U]+wt;
-				parent[V] = U;
-				cost_parent[V] = value[V];
-				updated = true;
-			}
-		}
-		if(updated==false)
-			break;
-	}
-	//Now check by relaxing once more if we have a negative edge cycle
-	for(int j=0;j<E and updated==true;++j)
-		{
-			int U = Edges[j].src;
-			int V = Edges[j].dst;
-			int wt = Edges[j].wt;
-			if(value[U]!=INT_MAX and value[U]+wt<value[V])
-			{
-				cout<<"Graph has -VE edge cycle\n";
-				return;
-			}
-		}
-	//Print Shortest Path Graph
-	for(int i=1;i<V;++i)
-		cout<<"U->V: "<<parent[i]<<"->"<<i<<"  Cost to reach "<<parent[i]<<"from source 0 = "<<value[i]<<"\n";
+    // Check for negative-weight cycle
+    for (int j = 0; j < E; ++j) {
+        int u = edges[j].src;
+        int v = edges[j].dst;
+        int wt = edges[j].wt;
+        if (dist[u] != INT_MAX && dist[u] + wt < dist[v]) {
+            cout << "Graph contains negative weight cycle\n";
+            return;
+        }
+    }
+
+    // Output the shortest distances
+    for (int i = 1; i < V; ++i) {
+        cout << "0 -> " << i << " : " << dist[i] << endl;
+    }
 }
 
-int main()
-{
-	cin>>V>>E;	//Enter no of Vertices and Edges
-	vector<edge> Edges(E);
+int main() {
+    int V, E;
+    cout<<"Enter no. of vertices and edges : \n";
+    cin >> V >> E;
+    
+    vector<Edge> edges(E);
 
-	//Now input all E edges
-	int src,dst,wt;
-	for(int i=0;i<E;++i)
-	{
-		cin>>src>>dst>>wt;
-		Edges[i].src = src;
-		Edges[i].dst = dst;
-		Edges[i].wt = wt;
-	}
+    for (int i = 0; i < E; ++i) {
+        cout<<"Enter edge "<<i+1<<" : \n";
+        cin >> edges[i].src ;
+        cin >> edges[i].dst ;
+        cin >> edges[i].wt  ;
+    }
 
-	bellmanFord(Edges);	
-	return 0;
+    bellmanFord(V, E, edges);
+    return 0;
 }
-
-//TIME COMPLEXITY: O(V.E)
