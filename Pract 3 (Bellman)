@@ -7,9 +7,9 @@ struct Edge {
 
 void bellmanFord(int V, int E, vector<Edge>& edges) {
     vector<int> dist(V, INT_MAX);
-    dist[0] = 0; // Source vertex (node 0)
+    dist[0] = 0; 
     
-    // Relax edges V-1 times
+    
     for (int i = 1; i < V; ++i) {
         for (int j = 0; j < E; ++j) {
             int u = edges[j].src;
@@ -21,7 +21,7 @@ void bellmanFord(int V, int E, vector<Edge>& edges) {
         }
     }
 
-    // Check for negative-weight cycle
+    
     for (int j = 0; j < E; ++j) {
         int u = edges[j].src;
         int v = edges[j].dst;
@@ -32,7 +32,7 @@ void bellmanFord(int V, int E, vector<Edge>& edges) {
         }
     }
 
-    // Output the shortest distances
+    
     for (int i = 1; i < V; ++i) {
         cout << "0 -> " << i << " : " << dist[i] << endl;
     }
