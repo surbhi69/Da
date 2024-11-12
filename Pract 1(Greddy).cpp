@@ -7,10 +7,10 @@ struct Item {
     int profit;
     int weight;
     double fraction;
-    int index; // To track original index for output
+    int index; 
 };
 
-// Function to compare items by their profit/weight ratio
+
 bool compare(Item a, Item b) {
     return a.fraction > b.fraction;
 }
@@ -25,7 +25,7 @@ int main() {
     cin >> n;
 
     vector<Item> items(n);
-    vector<double> value(n, 0.0); // Initialize value array to 0 for fractions
+    vector<double> value(n, 0.0); // Initialize value array to 0 for fractio
 
     for (int i = 0; i < n; i++) {
         cout << "Enter Profit and Weight for item " << i + 1 << ":\n";
@@ -34,7 +34,7 @@ int main() {
         items[i].index = i;
     }
 
-    // Sort items by profit-to-weight ratio in descending order
+    
     sort(items.begin(), items.end(), compare);
 
     double maxProfit = 0.0;
@@ -43,9 +43,9 @@ int main() {
         if (w >= items[i].weight) {
             w -= items[i].weight;
             maxProfit += items[i].profit;
-            value[items[i].index] = 1.0; // Full item taken
+            value[items[i].index] = 1.0; 
         } else {
-            // Take a fraction of the item
+            
             maxProfit += items[i].profit * ((double) w / items[i].weight);
             value[items[i].index] = (double) w / items[i].weight;
             w = 0; // Knapsack is now full
